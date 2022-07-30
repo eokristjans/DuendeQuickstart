@@ -1,3 +1,5 @@
+using Duende.IdentityServer;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 namespace IdentityServer;
@@ -25,6 +27,42 @@ internal static class HostingExtensions
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
             .AddTestUsers(TestUsers.Users); // Quickstart 2
+
+        builder.Services.AddAuthentication()
+
+            // Adding Google as an external authenticaiton is supposedly very easy, but requires 
+            // installing a nuget package, registering with Google and setting up a client.
+            // https://docs.duendesoftware.com/identityserver/v6/quickstarts/2_interactive/#add-google-support
+            /*
+            .AddGoogle("Google", options =>
+            {
+                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
+            */
+            // Adding this additional Demo OpenID Connect-based external provider does not require any registration.
+            // There one can log in as Bob, or log in with Google to the Demo IdentityServer. Google then
+            // redirects you back to the Demo IdentityServer which redirects you back to your own page.
+            // But these IdentityServers have not given us access to claims, it seems.
+            .AddOpenIdConnect("oidc", "Demo IdentityServer", options =>
+            {
+                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+                options.SaveTokens = true;
+
+                options.Authority = "https://demo.duendesoftware.com";
+                options.ClientId = "interactive.confidential";
+                options.ClientSecret = "secret";
+                options.ResponseType = "code";
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name",
+                    RoleClaimType = "role"
+                };
+            });
 
         return builder.Build();
     }
