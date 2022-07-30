@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +37,15 @@ builder.Services.AddAuthentication(options =>
         options.Scope.Clear();
         options.Scope.Add("openid");
         options.Scope.Add("profile");
+        
+        // Quickstart 2 Further Experiments:
+        // Requesting the scope that was added and access granted to this client.
+        options.Scope.Add("verification");
+        // JwtClaimTypes.EmailVerified exists as a constant on IdentityModel and is specified on the
+        // TestUsers in the IdentityServer, which are mapped by TestUserProfileService: IProfileService.
+        // You can provide your own implementation of IProfileService to customize
+        // this process with custom logic, data access, etc.
+        options.ClaimActions.MapJsonKey("email_verified", "email_verified");
 
         // The IS is configured so that the WebClient can request the claims associated with
         // the profile scope, but we must tell the client to retrieve them from the userinfo endpoint.

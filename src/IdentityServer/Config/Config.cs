@@ -29,7 +29,21 @@ public static class Config
             // which are: name, family_name, given_name, preferred_username, picture, website, gender, birthdate etc.
             // Other OIDC-defined optional claims are email, address and phone.
             // These scope values are returned from the UserInfo Endpoint (/connect/userinfo).
-            new IdentityResources.Profile()
+            new IdentityResources.Profile(),
+
+            // Quickstart 2 Further Experiments. Add an extra claim and then give the client access to it.
+            new IdentityResource()
+            {
+                // The Name property of the resource is the scope value that clients
+                // can request to get the associated UserClaims. 
+                // Hence probably wise to define the scope name as a constant.
+                Name = ExtraScopes.Verification,
+                UserClaims = new List<string>
+                {
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.EmailVerified
+                }
+            }
         };
 
     public static IEnumerable<Client> Clients => new Client[]

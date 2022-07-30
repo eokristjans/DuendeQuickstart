@@ -50,7 +50,8 @@ public static class Clients
             AllowedScopes = new List<string>
             {
                 IdentityServerConstants.StandardScopes.OpenId,
-                IdentityServerConstants.StandardScopes.Profile
+                IdentityServerConstants.StandardScopes.Profile,
+                ExtraScopes.Verification
             }
         };
     }
