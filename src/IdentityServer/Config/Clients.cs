@@ -35,6 +35,8 @@ public static class Clients
         return new Client
         {
             ClientId = "web",
+
+            // secret for authentication (should generally be a real secret)
             ClientSecrets = { new Secret("secret".Sha256()) },
 
             AllowedGrantTypes = GrantTypes.Code,

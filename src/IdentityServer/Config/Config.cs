@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using IdentityModel;
 
 namespace IdentityServer;
 
@@ -25,11 +26,17 @@ public static class Config
             // All standard scopes and their corresponding claims can be found in OpenID Connect
             // specification. https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims
             // OPTIONAL. This scope value requests access to the End-User's default profile Claims,
-            // which are: name, family_name, given_name, nickname, preferred_username, picture, website, gender, birthdate etc.
+            // which are: name, family_name, given_name, preferred_username, picture, website, gender, birthdate etc.
             // Other OIDC-defined optional claims are email, address and phone.
-            // These scope values are returned from the UserInfo Endpoint.
+            // These scope values are returned from the UserInfo Endpoint (/connect/userinfo).
             new IdentityResources.Profile()
         };
+
+    public static IEnumerable<Client> Clients => new Client[]
+    {
+        IdentityServer.Clients.GetMachineToMachineClient(),
+        IdentityServer.Clients.GetInteractiveClient()
+    };
 
     /// <summary>
     /// Scope is a core feature of OAuth that allows you to express the extent or scope of access.
@@ -50,12 +57,6 @@ public static class Config
     public static IEnumerable<ApiScope> ApiScopes => new ApiScope[]
     {
         GetScopeWithCompleteAccessToApi()
-    };
-
-    public static IEnumerable<Client> Clients => new Client[] 
-    {
-        IdentityServer.Clients.GetMachineToMachineClient(),
-        IdentityServer.Clients.GetInteractiveClient()
     };
 
     /// <summary> Quickstart 1 </summary>

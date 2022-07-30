@@ -6,17 +6,22 @@ internal static class HostingExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        // uncomment if you want to add a UI
-        //builder.Services.AddRazorPages();
+        // Quickstart 2 (add UI)
+        builder.Services.AddRazorPages();
 
         builder.Services.AddIdentityServer(options =>
             {
                 // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
                 options.EmitStaticAudienceClaim = true;
             })
-            .AddInMemoryIdentityResources(Config.IdentityResources)
+            // Added just for kicks after Quickstart 2.
+            // Enables a page where an authenticated user can view and delete his sessions.
+            .AddServerSideSessions() 
 
-            // Load the scopes and clients from Config.cs
+            // Load the scopes and clients from Config.cs, although these extension methods also
+            // support adding Resources, ApiScopes and Clients from the ASP.NET Core configuration file
+            // https://docs.duendesoftware.com/identityserver/v6/fundamentals/clients/#defining-clients-in-appsettingsjson
+            .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
             .AddTestUsers(TestUsers.Users); // Quickstart 2
@@ -33,15 +38,15 @@ internal static class HostingExtensions
             app.UseDeveloperExceptionPage();
         }
 
-        // uncomment if you want to add a UI
-        //app.UseStaticFiles();
-        //app.UseRouting();
+        // Quickstart 2 (add UI)
+        app.UseStaticFiles();
+        app.UseRouting();
             
         app.UseIdentityServer();
 
-        // uncomment if you want to add a UI
-        //app.UseAuthorization();
-        //app.MapRazorPages().RequireAuthorization();
+        // Quickstart 2 (add UI)
+        app.UseAuthorization();
+        app.MapRazorPages().RequireAuthorization();
 
         return app;
     }
