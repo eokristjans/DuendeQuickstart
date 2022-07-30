@@ -18,7 +18,8 @@ internal static class HostingExtensions
 
             // Load the scopes and clients from Config.cs
             .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryClients(Config.Clients);
+            .AddInMemoryClients(Config.Clients)
+            .AddTestUsers(TestUsers.Users); // Quickstart 2
 
         return builder.Build();
     }
