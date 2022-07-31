@@ -1,4 +1,5 @@
 using Duende.IdentityServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
@@ -11,37 +12,27 @@ internal static class HostingExtensions
         // Quickstart 2 (add UI)
         builder.Services.AddRazorPages();
 
-        builder.Services.AddIdentityServer(options =>
-            {
-                // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
-                options.EmitStaticAudienceClaim = true;
-            })
-            // Added just for kicks after Quickstart 2.
-            // Enables a page where an authenticated user can view and delete his sessions.
-            .AddServerSideSessions() 
+        // Quickstart 4: Configure Sqlite DB for configuration and operational data store
+        var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
+        const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
 
-            // Load the scopes and clients from Config.cs, although these extension methods also
-            // support adding Resources, ApiScopes and Clients from the ASP.NET Core configuration file
-            // https://docs.duendesoftware.com/identityserver/v6/fundamentals/clients/#defining-clients-in-appsettingsjson
-            .AddInMemoryIdentityResources(Config.IdentityResources)
-            .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryClients(Config.Clients)
+        // You will use Entity Framework migrations later on in this quickstart to manage the database schema.
+        // The call to MigrationsAssembly(...) tells Entity Framework that the host project will contain the migrations.
+        // This is necessary since the host project is in a different assembly than the one that contains the DbContext classes.
+        builder.Services.AddIdentityServer()
+            .AddConfigurationStore(options =>
+            {
+                options.ConfigureDbContext = b => b.UseSqlite(connectionString,
+                    sql => sql.MigrationsAssembly(migrationsAssembly));
+            })
+            .AddOperationalStore(options =>
+            {
+                options.ConfigureDbContext = b => b.UseSqlite(connectionString,
+                    sql => sql.MigrationsAssembly(migrationsAssembly));
+            })
             .AddTestUsers(TestUsers.Users); // Quickstart 2
 
         builder.Services.AddAuthentication()
-
-            // Adding Google as an external authenticaiton is supposedly very easy, but requires 
-            // installing a nuget package, registering with Google and setting up a client.
-            // https://docs.duendesoftware.com/identityserver/v6/quickstarts/2_interactive/#add-google-support
-            /*
-            .AddGoogle("Google", options =>
-            {
-                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-            });
-            */
             // Adding this additional Demo OpenID Connect-based external provider does not require any registration.
             // There one can log in as Bob, or log in with Google to the Demo IdentityServer. Google then
             // redirects you back to the Demo IdentityServer which redirects you back to your own page.
@@ -75,6 +66,13 @@ internal static class HostingExtensions
         {
             app.UseDeveloperExceptionPage();
         }
+
+        // Now if you run the IdentityServer project, the database should be created
+        // and seeded with the quickstart configuration data.
+        // You should be able to use a tool like SQL Lite Studio to connect and inspect the data.
+        // It should be unnecessary and perhaps even devastating to run this again.
+        // Once the database has been populated, this can be commented out.
+        //InitializeDatabase.CreateAndSeedFromMigrationsAndQuickstartConfigData(app);
 
         // Quickstart 2 (add UI)
         app.UseStaticFiles();
