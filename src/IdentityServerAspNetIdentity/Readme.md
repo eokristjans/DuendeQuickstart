@@ -11,8 +11,6 @@ to authorize the WebClient to call the Api on the user's behalf.
 
 ## Task 1
 
-Move 
-
 In Quickstart 4 we moved configuration and other temporary data into an Sqlite database 
 using Entity Framework, but the template used to initiate this server still uses InMemoryStores. 
 Can follow [Quickstart 4](https://docs.duendesoftware.com/identityserver/v6/quickstarts/4_ef/) 
