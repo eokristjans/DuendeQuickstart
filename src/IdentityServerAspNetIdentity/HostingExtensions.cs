@@ -16,6 +16,10 @@ internal static class HostingExtensions
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+        // Quickstart 5 - Add ASP.NET Core Identity which:
+        //   Is an API that supports user interface (UI) login functionality.
+        //   Manages users, passwords, profile data, roles, claims, tokens and more.
+        // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
@@ -34,6 +38,9 @@ internal static class HostingExtensions
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
+            // Adds the integration layer to allow IdentityServer to access the user data
+            // for the ASP.NET Core Identity user database. This is needed when IdentityServer
+            // must add claims for the users into tokens.
             .AddAspNetIdentity<ApplicationUser>();
         
         builder.Services.AddAuthentication()
