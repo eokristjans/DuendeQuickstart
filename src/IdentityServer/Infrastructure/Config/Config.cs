@@ -8,7 +8,6 @@ namespace IdentityServer;
 /// </summary>
 public static class Config
 {
-
     /// <summary>
     /// Quickstart 2.
     /// An identity resource is a named group of claims about a user that can be requested using the scope parameter.
@@ -17,33 +16,32 @@ public static class Config
     /// and that clients want to access. In contrast to OAuth, scopes in OIDC represent identity 
     /// data like user id, name or email address rather than APIs.
     /// </summary>
-    public static IEnumerable<IdentityResource> IdentityResources =>
-        new IdentityResource[]
-        { 
-            new IdentityResources.OpenId(), // SubjectId
+    public static IEnumerable<IdentityResource> IdentityResources => new IdentityResource[]
+    { 
+        new IdentityResources.OpenId(), // SubjectId
 
-            // All standard scopes and their corresponding claims can be found in OpenID Connect
-            // specification. https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims
-            // OPTIONAL. This scope value requests access to the End-User's default profile Claims,
-            // which are: name, family_name, given_name, preferred_username, picture, website, gender, birthdate etc.
-            // Other OIDC-defined optional claims are email, address and phone.
-            // These scope values are returned from the UserInfo Endpoint (/connect/userinfo).
-            new IdentityResources.Profile(),
+        // All standard scopes and their corresponding claims can be found in OpenID Connect
+        // specification. https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims
+        // OPTIONAL. This scope value requests access to the End-User's default profile Claims,
+        // which are: name, family_name, given_name, preferred_username, picture, website, gender, birthdate etc.
+        // Other OIDC-defined optional claims are email, address and phone.
+        // These scope values are returned from the UserInfo Endpoint (/connect/userinfo).
+        new IdentityResources.Profile(),
 
-            // Quickstart 2 Further Experiments. Add an extra claim and then give the client access to it.
-            new IdentityResource()
+        // Quickstart 2 Further Experiments. Add an extra claim and then give the client access to it.
+        new IdentityResource()
+        {
+            // The Name property of the resource is the scope value that clients
+            // can request to get the associated UserClaims. 
+            // Hence probably wise to define the scope name as a constant.
+            Name = Constants.IdentityResourceScopes.Verification,
+            UserClaims = new List<string>
             {
-                // The Name property of the resource is the scope value that clients
-                // can request to get the associated UserClaims. 
-                // Hence probably wise to define the scope name as a constant.
-                Name = Constants.IdentityResourceScopes.Verification,
-                UserClaims = new List<string>
-                {
-                    JwtClaimTypes.Email,
-                    JwtClaimTypes.EmailVerified
-                }
+                JwtClaimTypes.Email,
+                JwtClaimTypes.EmailVerified
             }
-        };
+        }
+    };
 
     public static IEnumerable<Client> Clients => new Client[]
     {
