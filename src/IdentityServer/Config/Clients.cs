@@ -26,7 +26,7 @@ public static class Clients
             },
 
             // scopes that client has access to
-            AllowedScopes = { "api1" }
+            AllowedScopes = { Constants.ApiScopes.API1 }
         };
     }
 
@@ -47,11 +47,17 @@ public static class Clients
             // where to redirect to after logout
             PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
 
+            // scopes that client has access to
             AllowedScopes = new List<string>
             {
+                // Identity Resources, part of the identity token,
+                // containing information about the authentication process and session
                 IdentityServerConstants.StandardScopes.OpenId,
                 IdentityServerConstants.StandardScopes.Profile,
-                ExtraScopes.Verification
+                Constants.IdentityResourceScopes.Verification,
+
+                // Add ApiScope that gives access to the API, as part of the Access Token
+                Constants.ApiScopes.API1
             }
         };
     }

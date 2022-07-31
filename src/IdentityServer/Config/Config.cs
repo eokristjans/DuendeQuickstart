@@ -1,5 +1,4 @@
-﻿using Duende.IdentityServer;
-using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer.Models;
 using IdentityModel;
 
 namespace IdentityServer;
@@ -37,7 +36,7 @@ public static class Config
                 // The Name property of the resource is the scope value that clients
                 // can request to get the associated UserClaims. 
                 // Hence probably wise to define the scope name as a constant.
-                Name = ExtraScopes.Verification,
+                Name = Constants.IdentityResourceScopes.Verification,
                 UserClaims = new List<string>
                 {
                     JwtClaimTypes.Email,
@@ -77,6 +76,6 @@ public static class Config
     /// <returns>A scope that represents complete access to the API.</returns>
     private static ApiScope GetScopeWithCompleteAccessToApi()
     {
-        return new ApiScope(name: "api1", displayName: "MyAPI");
+        return new ApiScope(name: Constants.ApiScopes.API1, displayName: "MyAPI");
     }
 }

@@ -31,6 +31,11 @@ builder.Services.AddAuthentication(options =>
         options.ClientSecret = "secret";
         options.ResponseType = "code";
 
+        // SaveTokens is used to persist the tokens in the cookie (as they will be needed later).
+        // Since SaveTokens is enabled, ASP.NET Core will automatically store the id, access,
+        // and refresh tokens (!) in the properties of the authentication cookie.
+        options.SaveTokens = true;
+
         // The Scope is the collection of scopes that the client will request.
         // By default it includes the openid and profile scopes, but clear the collection
         // and add them back for explicit clarity.
@@ -47,12 +52,13 @@ builder.Services.AddAuthentication(options =>
         // this process with custom logic, data access, etc.
         options.ClaimActions.MapJsonKey("email_verified", "email_verified");
 
+        // Quickstart 3: Request ApiScope with access to all of api1 on behalf of the authenticated user
+        options.Scope.Add("api1");
+        //options.Scope.Add("offline_access");
+
         // The IS is configured so that the WebClient can request the claims associated with
         // the profile scope, but we must tell the client to retrieve them from the userinfo endpoint.
         options.GetClaimsFromUserInfoEndpoint = true;
-
-        // SaveTokens is used to persist the tokens in the cookie (as they will be needed later).
-        options.SaveTokens = true;
     });
 
 var app = builder.Build();
