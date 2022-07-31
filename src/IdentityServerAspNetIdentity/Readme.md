@@ -11,11 +11,11 @@ to authorize the WebClient to call the Api on the user's behalf.
 
 ## Task 1
 
-##### Move configuration and other temporary data into a database using Entity Framework
+Move 
 
-In Quickstart 4 we replaced the InMemoryStores with Sqlite, but the template used to 
-initiate this server still uses InMemoryStores. Can follow 
-[Quickstart 4](https://docs.duendesoftware.com/identityserver/v6/quickstarts/4_ef/) 
+In Quickstart 4 we moved configuration and other temporary data into an Sqlite database 
+using Entity Framework, but the template used to initiate this server still uses InMemoryStores. 
+Can follow [Quickstart 4](https://docs.duendesoftware.com/identityserver/v6/quickstarts/4_ef/) 
 again to add Sqlite.
 
 ## Tasks 2-6
@@ -45,3 +45,18 @@ they suggested adding UI code for user registration, password reset, and other t
 you might expect from Microsoft’s templates that include 
 [ASP.NET Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=netcore-cli#create-a-web-app-with-authentication).
 
+## Task 9
+
+Connect to Azure KeyVault and use it for client secrets and keys.
+
+## Task 10 
+
+Add Application Insights.
+
+## Task 11
+
+Consider replacing SQLite with Postgres.
+
+## Task 12
+
+Deploy to Azure cloud.
